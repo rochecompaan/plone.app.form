@@ -28,3 +28,5 @@ plone/app/form/pageform.pt
 plone/app/form/subpageform.pt
 plone/app/form/tests.py
 plone/app/form/visualtest.py
+plone/mail/__init__.py
+plone/mail/tests.py

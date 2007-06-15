@@ -49,8 +49,10 @@
 
   <div metal:define-slot="extra_info" tal:replace="nothing">
   </div>
+  <div metal:define-slot="extra_top" tal:replace="nothing">
+  </div>
 
-  <fieldset>
+  <fieldset metal:define-slot="formbody">
     <legend tal:define="form_name view/form_name|nothing"
             tal:condition="form_name"
             tal:content="form_name">Form name</legend>
@@ -84,6 +86,7 @@
     </div>
 </tal:block>
 
+  <metal:block define-slot="extra_bottom" />
   <metal:block define-slot="above_buttons" />
 <div id="actionsView">
   <span class="actionButtons"
