@@ -12,9 +12,12 @@
 
 <div metal:define-macro="form">
 
-<form action="." metal:define-macro="master"
-      tal:attributes="action request/URL" method="post"
-      class="edit-form" enctype="multipart/form-data"
+<form action="."
+      metal:define-macro="master" 
+      tal:attributes="action request/URL;
+                      class string:edit-form kssattr-formname-${view/__name__}"
+      enctype="multipart/form-data"
+      method="post"
       id="zc.page.browser_form">
 
 <div id="viewspace" metal:define-slot="viewspace">
@@ -79,9 +82,12 @@
   <tal:block tal:repeat="widget view/widgets">
     <div class="field"
          tal:define="description widget/hint;
-                     error widget/error"
-         tal:attributes="class python:'field'+(error and ' error' or '');
-                         id string:field-${widget/name}">
+                     error widget/error;
+                     normalized_name python:widget.name.replace('.', '-');
+                     fieldname_class string:kssattr-fieldname-${widget/name};
+                     error_class python:error and ' error' or ' '"
+         tal:attributes="id string:formfield-${normalized_name};
+                         class string:field ${fieldname_class}${error_class}">
           <label tal:condition="widget/label"
                  tal:attributes="for widget/name">
             <span i18n:translate=""

@@ -1,0 +1,24 @@
+<ul class="uberselectionWidgetResults">
+  <tal:results repeat="term options/results">
+    <li tal:attributes="usw-parent term/parent_token;  
+                        usw-browse term/browse_token;">
+      <a href=""
+         class="uswParent"
+         tal:condition="python:term.parent_token is not None"
+         tal:attributes="href term/parent_token">&lt;</a>
+
+      <span tal:attributes="title term/description | nothing"
+            tal:content="term/title">title</span>
+
+      <span class="discreet" 
+            tal:condition="term/description | nothing"
+            tal:content="term/description" />
+
+      <a href=""
+         class="uswBrowse"
+         tal:condition="python:term.browse_token is not None"
+         tal:attributes="href term/browse_token">&gt;</a>
+
+    </li>
+  </tal:results>
+</ul>

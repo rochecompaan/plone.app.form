@@ -1,0 +1,62 @@
+input.uberSelectionWidgetInput:keypress(enter) {
+    evt-keypress-preventdefault: true;
+    evt-keypress-keycodes: 13;
+    action-server: uberselectionwidget_refresh_search; 
+    uberselectionwidget_refresh_search-formname: kssAttr('formname', true); 
+    uberselectionwidget_refresh_search-fieldname: kssAttr('fieldname', true); 
+    uberselectionwidget_refresh_search-searchterm: currentFormVar(); 
+}
+
+input.uberSelectionWidgetInput:keypress(arrowleft) {
+    evt-keypress-preventdefault: true;
+    evt-keypress-keycodes: 37;
+    action-server: uberselectionwidget_refresh_browse; 
+    uberselectionwidget_refresh_browse-formname: kssAttr('formname', true); 
+    uberselectionwidget_refresh_browse-fieldname: kssAttr('fieldname', true); 
+    uberselectionwidget_refresh_browse-target: stateVar('usw-parent'); 
+}
+
+input.uberSelectionWidgetInput:keypress(arrowright) {
+    evt-keypress-preventdefault: true;
+    evt-keypress-keycodes: 39;
+    action-server: uberselectionwidget_refresh_browse; 
+    uberselectionwidget_refresh_browse-formname: kssAttr('formname', true); 
+    uberselectionwidget_refresh_browse-fieldname: kssAttr('fieldname', true); 
+    uberselectionwidget_refresh_browse-target: stateVar('usw-browse'); 
+}
+
+input.uberSelectionWidgetInput:keypress(arrowup) {
+    evt-keypress-preventdefault: true;
+    evt-keypress-keycodes: 38;
+    action-client: uberselectionwidget-arrowup;
+    uberselectionwidget-arrowup-fieldname: kssAttr('fieldname', true);;
+}
+
+input.uberSelectionWidgetInput:keypress(arrowdown) {
+    evt-keypress-preventdefault: true;
+    evt-keypress-keycodes: 40;
+    action-client: uberselectionwidget-arrowdown;
+    uberselectionwidget-arrowdown-fieldname: kssAttr('fieldname', true);;
+}
+
+fieldset.uberselectionWidgetResults:load {
+    action-client: setStyle;
+    setStyle-name: display;
+    setStyle-value: none;
+}
+
+ul.uberselectionWidgetResults a.uswParent:click {
+    evt-click-preventdefault: true;
+    action-server: uberselectionwidget_refresh_browse; 
+    uberselectionwidget_refresh_browse-formname: kssAttr('formname', true);
+    uberselectionwidget_refresh_browse-fieldname: kssAttr('fieldname', true);
+    uberselectionwidget_refresh_browse-target: nodeAttr('href');
+}
+
+ul.uberselectionWidgetResults a.uswBrowse:click {
+    evt-click-preventdefault: true;
+    action-server: uberselectionwidget_refresh_browse; 
+    uberselectionwidget_refresh_browse-formname: kssAttr('formname', true);
+    uberselectionwidget_refresh_browse-fieldname: kssAttr('fieldname', true);
+    uberselectionwidget_refresh_browse-target: nodeAttr('href');
+}

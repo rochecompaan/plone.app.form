@@ -5,6 +5,26 @@
     xmlns:zcml="http://namespaces.zope.org/zcml">
 
   <include package=".widgets" />
+  
+  <!-- PLIP 201 - USW - DO NOT MERGE -->
+  
+  <browser:page
+      name="test_form"
+      for="*"
+      class=".testform.TestForm"
+      permission="zope2.View"
+      />
+      
+  <!-- END -->
+  
+  <!-- PLIP 201 - USW - form CSS -->
+  
+  <browser:resource
+      file="form.css"
+      name="plone.app.form.css"
+      />
+
+  <!-- END -->
 
   <adapter
       for="Products.Five.BrowserView"

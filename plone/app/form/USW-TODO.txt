@@ -1,0 +1,31 @@
+UberSelectionWidget to-do:
+
+Dynamic/KSS mode:
+
+  - Trigger search when clicking on the Search button, not just the Enter key
+
+  - Need a client-side action to select items
+    
+        - For multi-USW, this should add a new checkbox in the select area,
+          with the right name (so that it re-appears if the form is reloaded,
+          e.g. after validation)
+        
+        - For multi-USW, also need a handler to make the box disappear when
+          unticked
+          
+        - For single-USW, should use radio button and ensure that only one
+          box is shown
+          
+  - Visual indicators that parent/browse is available (e.g. arrows - should
+    also be clickable)
+    
+  - Widget rendering needs some CSS love
+  
+  - Currently we limit to 20 search results - need to have an explicit
+    batching. This can use internal scrolling with lazy loading.
+    
+Static/non-KSS mode:
+
+  - Also needs working initial query
+  
+  - Also needs batching

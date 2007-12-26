@@ -7,8 +7,14 @@ from zope.app.form.browser.interfaces import \
 from zope.app.form.browser.widget import SimpleInputWidget
 from zope.app.pagetemplate.viewpagetemplatefile import ViewPageTemplateFile
 
+from zope.formlib import form as formlib
+
 from plone.app.vocabularies.interfaces import IBrowsableTerm
 
+from kss.core import kssaction
+from plone.app.kss.plonekssview import PloneKSSView
+
+from Acquisition import aq_inner
 
 class UberSelectionWidget(SimpleInputWidget):
     _error = None
@@ -154,3 +160,54 @@ class UberMultiSelectionWidget(UberSelectionWidget):
         if value is not None:
             value = [self.terms.getTerm(x) for x in value]
         return value
+
+class UberSelectionKSSView(PloneKSSView):
+    """This view contains KSS actions to support the uber-selection widget
+    """
+
+    template = ViewPageTemplateFile('uberselectionwidget-results.pt')
+
+    @kssaction
+    def refresh_search(self, formname, fieldname, searchterm):
+        """Given a form (view) name, a widget name and the submitted
+        search term, perform the search as the widget would and refresh the
+        results area with this information.
+        """
+        widget = self._get_widget(formname, fieldname)
+        self.request.form[widget.name + '.search'] = 'fakebutton'
+        self.request.form[widget.name + '.query'] = searchterm
+        self.search_and_insert(widget, fieldname)
+
+    @kssaction
+    def refresh_browse(self, formname, fieldname, target):
+        """Given a form (view) name, a widget name and a target folder, 
+        refresh the results area with the contents of the given target.
+        """
+        widget = self._get_widget(formname, fieldname)
+        self.request.form[widget.name + '.browse.' + target] = 'fakebutton'
+        self.search_and_insert(widget, fieldname)
+        
+    def search_and_insert(self, widget, fieldname):
+        """ perform search and insert rendered results into widget space """
+        results = widget.queryview.results(widget.name)
+        if results is not None:
+            results = [ widget.terms.getTerm(item) for item in results ]
+        html = self.template(results=results)
+        core = self.getCommandSet('core')
+        fieldid = 'uberselectionwidget-%s' % fieldname
+        area = core.getCssSelector('div[id=%s] .uberselectionWidgetResults' % fieldid)
+        core.replaceHTML(area, html)
+
+    def _get_widget(self, formname, fieldname):
+        context = aq_inner(self.context)
+        
+        form = getMultiAdapter((context, self.request), name=formname)
+        form = form.__of__(context)
+        
+        fieldname = fieldname[len(form.prefix)+1:]
+        field = form.form_fields[fieldname]
+        
+        widgets = formlib.setUpWidgets((field,), form.prefix, context, 
+            self.request, form=form, adapters={}, ignore_request=True)
+            
+        return widgets[fieldname]

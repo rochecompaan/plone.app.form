@@ -1,7 +1,45 @@
 <configure
     xmlns="http://namespaces.zope.org/zope"
     xmlns:browser="http://namespaces.zope.org/browser"
-    xmlns:five="http://namespaces.zope.org/five">
+    xmlns:five="http://namespaces.zope.org/five"
+    xmlns:kss="http://namespaces.zope.org/kss">
+
+    <!-- PLIP 201 - USW KSS -->
+    
+    <browser:resource
+      file="uberselectionwidget.js"
+      name="uberselectionwidget.js"
+      />
+
+    <browser:resource
+      file="uberselectionwidget.kss"
+      name="uberselectionwidget.kss"
+      />
+      
+    <kss:action
+        name="uberselectionwidget-arrowup"
+        command_factory="selector"
+        jsfile="uberselectionwidget.js"
+        />
+        
+    <kss:action
+        name="uberselectionwidget-arrowdown"
+        command_factory="selector"
+        jsfile="uberselectionwidget.js"
+        />
+    
+    <browser:pages
+        for="*"
+        class=".uberselectionwidget.UberSelectionKSSView"
+        permission="zope2.View">
+      <browser:page
+        name="uberselectionwidget_refresh_search"
+        attribute="refresh_search" />
+      <browser:page
+        name="uberselectionwidget_refresh_browse"
+        attribute="refresh_browse" />
+    </browser:pages>
+
 
     <browser:page
         name="date_components_support"
