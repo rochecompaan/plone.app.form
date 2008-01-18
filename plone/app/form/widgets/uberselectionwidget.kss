@@ -9,7 +9,7 @@ input.uberSelectionWidgetInput:keypress(enter) {
 
 input.uberSelectionWidgetInput:keypress(arrowleft) {
     evt-keypress-preventdefault: true;
-    evt-keypress-keycodes: 37;
+    evt-keypress-keycodes: "37, 63234";
     action-server: uberselectionwidget_refresh_browse; 
     uberselectionwidget_refresh_browse-formname: kssAttr('formname', true); 
     uberselectionwidget_refresh_browse-fieldname: kssAttr('fieldname', true); 
@@ -18,7 +18,7 @@ input.uberSelectionWidgetInput:keypress(arrowleft) {
 
 input.uberSelectionWidgetInput:keypress(arrowright) {
     evt-keypress-preventdefault: true;
-    evt-keypress-keycodes: 39;
+    evt-keypress-keycodes: "39, 63235";
     action-server: uberselectionwidget_refresh_browse; 
     uberselectionwidget_refresh_browse-formname: kssAttr('formname', true); 
     uberselectionwidget_refresh_browse-fieldname: kssAttr('fieldname', true); 
@@ -27,22 +27,36 @@ input.uberSelectionWidgetInput:keypress(arrowright) {
 
 input.uberSelectionWidgetInput:keypress(arrowup) {
     evt-keypress-preventdefault: true;
-    evt-keypress-keycodes: 38;
+    evt-keypress-keycodes: "38, 63232";
     action-client: uberselectionwidget-arrowup;
-    uberselectionwidget-arrowup-fieldname: kssAttr('fieldname', true);;
+    uberselectionwidget-arrowup-fieldname: kssAttr('fieldname', true);
 }
 
 input.uberSelectionWidgetInput:keypress(arrowdown) {
     evt-keypress-preventdefault: true;
-    evt-keypress-keycodes: 40;
+    evt-keypress-keycodes: "40, 63233";
     action-client: uberselectionwidget-arrowdown;
-    uberselectionwidget-arrowdown-fieldname: kssAttr('fieldname', true);;
+    uberselectionwidget-arrowdown-fieldname: kssAttr('fieldname', true);
 }
 
 fieldset.uberselectionWidgetResults:load {
     action-client: setStyle;
     setStyle-name: display;
     setStyle-value: none;
+}
+
+input.uberSelectionWidgetInput:blur {
+    action-client: setStyle;
+    setStyle-kssSelector: css("ul.uberselectionWidgetResults");
+    setStyle-name: display;
+    setStyle-value: none;
+}
+
+input.uberSelectionWidgetInput:focus {
+    action-server: uberselectionwidget_refresh_search; 
+    uberselectionwidget_refresh_search-formname: kssAttr('formname', true); 
+    uberselectionwidget_refresh_search-fieldname: kssAttr('fieldname', true); 
+    uberselectionwidget_refresh_search-searchterm: currentFormVar(); 
 }
 
 ul.uberselectionWidgetResults a.uswParent:click {
