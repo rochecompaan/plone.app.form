@@ -9,7 +9,7 @@ var uberselectionwidget = function() {
     // stores information for each searchbox on the page
     var _search_handlers = {};
 
-    function _searchfactory($form, $widget, $inputnode) {
+    function _searchfactory($form, $$field, $inputnode) {
         // returns the search functions in a dictionary.
         // we need a factory to get a local scope for the event, this is
         // necessary, because IE doesn't have a way to get the target of
@@ -19,15 +19,16 @@ var uberselectionwidget = function() {
 
         function _hide() {
             // hides the result window
-            var $$result = $widget.find('fieldset.uberselectionWidgetResults, ul.uberselectionWidgetResults');
+            var $$result = $$field.find('fieldset.uberselectionWidgetResults, ul.uberselectionWidgetResults');
             $$result.hide();
             $lastsearch = null;
         };
 
         function _show($data) {
             // shows the result
-            var $$result = $widget.find('fieldset.uberselectionWidgetResults, ul.uberselectionWidgetResults');
+            var $$result = $$field.find('fieldset.uberselectionWidgetResults, ul.uberselectionWidgetResults');
             if (!$$result || $$result.length < 1) {
+                var $widget = $$field.find('div.widget');
                 $widget.append($data);
             } else {
                 if ($data) {
@@ -57,10 +58,18 @@ var uberselectionwidget = function() {
                 _hide();
                 return;
             }
-            
+
+            var formname = $.grep($form.attr('class').split(' '),
+                                  function(v) {
+                                      return v.indexOf('kssattr-formname-') == 0;
+                                  }).join('').slice(17);
+            var fieldname = $.grep($$field.attr('class').split(' '),
+                                  function(v) {
+                                      return v.indexOf('kssattr-fieldname-') == 0;
+                                  }).join('').slice(18);
             var $$query = {
-                formname: 'test_form',
-                fieldname: 'form.usw_single_test',
+                formname: formname,
+                fieldname: fieldname,
                 searchterm: $inputnode.value
             };
             // turn into a string for use as a cache key
@@ -79,9 +88,17 @@ var uberselectionwidget = function() {
 
             $lastsearch = null;
 
+            var formname = $.grep($form.attr('class').split(' '),
+                                  function(v) {
+                                      return v.indexOf('kssattr-formname-') == 0;
+                                  }).join('').slice(17);
+            var fieldname = $.grep($$field.attr('class').split(' '),
+                                  function(v) {
+                                      return v.indexOf('kssattr-fieldname-') == 0;
+                                  }).join('').slice(18);
             var $$query = {
-                formname: 'test_form',
-                fieldname: 'form.usw_single_test',
+                formname: formname,
+                fieldname: fieldname,
                 target: $target
             };
             // turn into a string for use as a cache key
@@ -97,7 +114,7 @@ var uberselectionwidget = function() {
         function _search_delayed() {
             // search after a small delay, used by onfocus
             window.setTimeout(
-                'uberselectionwidget.search("' + $widget.attr('id') + '")', 
+                'uberselectionwidget.search("' + $$field.attr('id') + '")', 
                 _search_delay);
         };
 
@@ -109,7 +126,7 @@ var uberselectionwidget = function() {
         };
     };
 
-    function _keyhandlerfactory($widget) {
+    function _keyhandlerfactory($$field) {
         // returns the key event handler functions in a dictionary.
         // we need a factory to get a local scope for the event, this is
         // necessary, because IE doesn't have a way to get the target of
@@ -118,7 +135,7 @@ var uberselectionwidget = function() {
 
         function _keyUp() {
             // select the previous element
-            var $$result = $widget.find('fieldset.uberselectionWidgetResults, ul.uberselectionWidgetResults');
+            var $$result = $$field.find('fieldset.uberselectionWidgetResults, ul.uberselectionWidgetResults');
             $cur = $$result.find('li.highlight').removeClass('highlight');
             $prev = $cur.prev('li');
             if (!$prev.length) $prev = $$result.find('li:last');
@@ -128,7 +145,7 @@ var uberselectionwidget = function() {
 
         function _keyDown() {
             // select the next element
-            var $$result = $widget.find('fieldset.uberselectionWidgetResults, ul.uberselectionWidgetResults');
+            var $$result = $$field.find('fieldset.uberselectionWidgetResults, ul.uberselectionWidgetResults');
             $cur = $$result.find('li.highlight').removeClass('highlight');
             $next = $cur.next('li');
             if (!$next.length) $next = $$result.find('li:first');
@@ -137,32 +154,32 @@ var uberselectionwidget = function() {
         };
 
         function _keyLeft() {
-            var $$result = $widget.find('fieldset.uberselectionWidgetResults, ul.uberselectionWidgetResults');
+            var $$result = $$field.find('fieldset.uberselectionWidgetResults, ul.uberselectionWidgetResults');
             $cur = $$result.find('li.highlight');
             if (!$cur || $cur.length < 1)
                 return true;
             var $target = $cur[0].attributes['usw-parent'];
             if (!$target)
                 return true;
-            _search_handlers[$widget.attr('id')].browse($target.nodeValue);
+            _search_handlers[$$field.attr('id')].browse($target.nodeValue);
             return false;
         };
 
         function _keyRight() {
-            var $$result = $widget.find('fieldset.uberselectionWidgetResults, ul.uberselectionWidgetResults');
+            var $$result = $$field.find('fieldset.uberselectionWidgetResults, ul.uberselectionWidgetResults');
             $cur = $$result.find('li.highlight');
             if (!$cur || $cur.length < 1)
                 return true;
             var $target = $cur[0].attributes['usw-browse'];
             if (!$target)
                 return true;
-            _search_handlers[$widget.attr('id')].browse($target.nodeValue);
+            _search_handlers[$$field.attr('id')].browse($target.nodeValue);
             return false;
         };
 
         function _keyEscape() {
             // hide results window
-            var $$result = $widget.find('fieldset.uberselectionWidgetResults, ul.uberselectionWidgetResults');
+            var $$result = $$field.find('fieldset.uberselectionWidgetResults, ul.uberselectionWidgetResults');
             $$result.find('li.highlight').removeClass('highlight');
             $$result.hide();
         };
@@ -180,7 +197,7 @@ var uberselectionwidget = function() {
                 default: {
                     console.log($event.keyCode);
                     $timeout = window.setTimeout(
-                        'uberselectionwidget.search("' + $widget.attr('id') + '")',
+                        'uberselectionwidget.search("' + $$field.attr('id') + '")',
                         _search_delay);
                 }
             }
@@ -189,7 +206,7 @@ var uberselectionwidget = function() {
         function _submit() {
             // check whether a search result was selected with the keyboard
             // and open it
-            var $$result = $widget.find('fieldset.uberselectionWidgetResults, ul.uberselectionWidgetResults');
+            var $$result = $$field.find('fieldset.uberselectionWidgetResults, ul.uberselectionWidgetResults');
             var $target = null;//$$result.find('li.highlight a').attr('href');
             if (!$target) return;
             window.location = $target;
@@ -205,14 +222,12 @@ var uberselectionwidget = function() {
     function _setup(i) {
         // add an id which is used by other functions to find the correct node
         var $id = 'uberselectionwidget' + i;
-        console.log($id);
         var $form = $(this).parents('form:first');
-        var $widget = $(this).parents('div.widget:first');
-        var $key_handler = _keyhandlerfactory($widget);
-        _search_handlers[$id] = _searchfactory($form, $widget, this);
-        console.log(_search_handlers);
+        var $$field = $(this).parents('div.field:first');
+        var $key_handler = _keyhandlerfactory($$field);
+        _search_handlers[$id] = _searchfactory($form, $$field, this);
 
-        $widget.attr('id', $id);
+        $$field.attr('id', $id);
         $(this).attr('autocomplete','off')
                .keydown($key_handler.handler)
                .focus(_search_handlers[$id].search_delayed)
@@ -230,11 +245,9 @@ var uberselectionwidget = function() {
 
     return {
         search: function(id) {
-            console.log('search '+id);
             _search_handlers[id].search();
         },
         hide: function(id) {
-            console.log('hide '+id);
             _search_handlers[id].hide();
         }
     };
