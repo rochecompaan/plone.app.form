@@ -193,6 +193,7 @@ var uberselectionwidget = function() {
                 case 27: return _keyEscape();
                 case 37: return _keyLeft();
                 case 39: return _keyRight();
+                case 13: return _submit();
                 case 9: break; // Tab
                 default: {
                     console.log($event.keyCode);
@@ -207,9 +208,11 @@ var uberselectionwidget = function() {
             // check whether a search result was selected with the keyboard
             // and open it
             var $$result = $$field.find('fieldset.uberselectionWidgetResults, ul.uberselectionWidgetResults');
-            var $target = null;//$$result.find('li.highlight a').attr('href');
-            if (!$target) return;
-            window.location = $target;
+            var $target = $$result.find('li.highlight input');
+            console.log($target);
+            if (!$target || $target.length < 1) {
+                return true;
+            }
             return false;
         };
 
@@ -232,6 +235,8 @@ var uberselectionwidget = function() {
                .keydown($key_handler.handler)
                .focus(_search_handlers[$id].search_delayed)
                .blur(_search_handlers[$id].hide);
+        $form.submit($key_handler.submit)
+        $$field.find(":submit").addClass('allowMultiSubmit');
     };
 
     $(function() {

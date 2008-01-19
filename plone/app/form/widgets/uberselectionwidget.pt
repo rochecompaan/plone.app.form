@@ -8,7 +8,7 @@
      tal:attributes="class string:kssattr-fieldname-${options/name};
                      id string:uberselectionwidget-${options/name}">
 
-  <fieldset tal:condition="options/value | nothing">
+  <fieldset class="uberselectionWidgetSelection" tal:condition="options/value | nothing">
     <legend i18n:translate="label_currentselection">Current selection</legend>
     <div tal:define="term options/value">
       <input type="hidden" value=""
