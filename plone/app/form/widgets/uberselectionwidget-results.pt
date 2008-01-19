@@ -7,7 +7,7 @@
          tal:condition="python:term.parent_token is not None"
          tal:attributes="href term/parent_token">&lt;</a>
 
-      <input type="radio"
+      <input type="hidden"
              tal:attributes="name string:${options/name};
                              value term/token" />
 

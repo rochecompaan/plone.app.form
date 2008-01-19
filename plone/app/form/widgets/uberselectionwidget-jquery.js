@@ -196,7 +196,6 @@ var uberselectionwidget = function() {
                 case 13: return _submit();
                 case 9: break; // Tab
                 default: {
-                    console.log($event.keyCode);
                     $timeout = window.setTimeout(
                         'uberselectionwidget.search("' + $$field.attr('id') + '")',
                         _search_delay);
@@ -217,14 +216,18 @@ var uberselectionwidget = function() {
             var $$title = $target.find('span.title').text();
             var $description = $target.find('span.description').text();
             var $selection = $$field.find('fieldset.uberselectionWidgetSelection, ul.uberselectionWidgetSelection');
+            var $$singleselect = $$field.find('input.uberSelectionWidgetInput').hasClass('single');
+            console.log($$singleselect);
             if (!$selection || $selection.length < 1) {
                 var $widget = $$field.find('div.widget');
                 $selection = $(document.createElement('ul')).addClass('uberselectionWidgetSelection');
                 $widget.prepend($selection);
-                console.log($selection);
             }
             if ($selection.find('input').is('[value='+$value+']')) {
                 return false;
+            }
+            if ($$singleselect) {
+                $selection.empty();
             }
             $selection.append(
                 $(document.createElement('div'))

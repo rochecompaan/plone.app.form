@@ -21,7 +21,7 @@
   </fieldset>
 
   <input type="text"
-         class="uberSelectionWidgetInput"
+         class="uberSelectionWidgetInput single"
          value=""
          autocomplete="off"
          tal:define="name string:${options/name}.query" 
