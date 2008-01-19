@@ -172,7 +172,7 @@ class UberSelectionKSSView(PloneKSSView):
         results = widget.queryview.results(widget.name)
         if results is not None:
             results = [ widget.terms.getTerm(item) for item in results ]
-        return self.template(results=results)
+        return self.template(results=results, name=fieldname)
 
     def refresh_search(self, formname, fieldname, searchterm):
         """Given a form (view) name, a widget name and the submitted

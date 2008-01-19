@@ -20,7 +20,7 @@ var uberselectionwidget = function() {
         function _hide() {
             // hides the result window
             var $$result = $$field.find('fieldset.uberselectionWidgetResults, ul.uberselectionWidgetResults');
-            $$result.hide();
+            $$result.remove();
             $lastsearch = null;
         };
 
@@ -208,11 +208,39 @@ var uberselectionwidget = function() {
             // check whether a search result was selected with the keyboard
             // and open it
             var $$result = $$field.find('fieldset.uberselectionWidgetResults, ul.uberselectionWidgetResults');
-            var $target = $$result.find('li.highlight input');
-            console.log($target);
+            var $target = $$result.find('li.highlight');
             if (!$target || $target.length < 1) {
                 return true;
             }
+            var $fieldname = $target.find('input').attr('name');
+            var $value = $target.find('input').attr('value');
+            var $$title = $target.find('span.title').text();
+            var $description = $target.find('span.description').text();
+            var $selection = $$field.find('fieldset.uberselectionWidgetSelection, ul.uberselectionWidgetSelection');
+            if (!$selection || $selection.length < 1) {
+                var $widget = $$field.find('div.widget');
+                $selection = $(document.createElement('ul')).addClass('uberselectionWidgetSelection');
+                $widget.prepend($selection);
+                console.log($selection);
+            }
+            if ($selection.find('input').is('[value='+$value+']')) {
+                return false;
+            }
+            $selection.append(
+                $(document.createElement('div'))
+                    .append(
+                        $(document.createElement('input'))
+                            .attr('type', 'checkbox')
+                            .attr('name', $fieldname)
+                            .attr('value', $value)
+                            .attr('checked', 'checked')
+                        )
+                    .append(
+                        $(document.createElement('span'))
+                            .text($$title)
+                            .attr('title', $description)
+                        )
+                );
             return false;
         };
 
@@ -235,7 +263,10 @@ var uberselectionwidget = function() {
                .keydown($key_handler.handler)
                .focus(_search_handlers[$id].search_delayed)
                .blur(_search_handlers[$id].hide);
-        $form.submit($key_handler.submit)
+        // make sure there is only ever one of our submit handlers bound
+        $form.unbind('submit',$key_handler.submit);
+        $form.submit($key_handler.submit);
+        // shut up the double submit warning
         $$field.find(":submit").addClass('allowMultiSubmit');
     };
 

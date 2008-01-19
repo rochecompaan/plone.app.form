@@ -8,12 +8,14 @@
          tal:attributes="href term/parent_token">&lt;</a>
 
       <input type="radio"
-             tal:attributes="value term/token" />
+             tal:attributes="name string:${options/name};
+                             value term/token" />
 
-      <span tal:attributes="title term/description | nothing"
+      <span class="title"
+            tal:attributes="title term/description | nothing"
             tal:content="term/title">title</span>
 
-      <span class="discreet" 
+      <span class="discreet description" 
             tal:condition="term/description | nothing"
             tal:content="term/description" />
 
