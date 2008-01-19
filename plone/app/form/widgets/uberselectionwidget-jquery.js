@@ -227,6 +227,8 @@ var uberselectionwidget = function() {
             }
             if ($$singleselect) {
                 $selection.empty();
+            } else {
+                $fieldname = $fieldname + ':list';
             }
             $selection.append(
                 $(document.createElement('div'))
