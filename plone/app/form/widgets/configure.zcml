@@ -7,8 +7,18 @@
     <!-- PLIP 201 - USW KSS -->
     
     <browser:resource
-      file="uberselectionwidget.js"
-      name="uberselectionwidget.js"
+      file="uberselectionwidget-kss.js"
+      name="uberselectionwidget-kss.js"
+      />
+
+    <browser:resource
+      file="uberselectionwidget-jquery.js"
+      name="uberselectionwidget-jquery.js"
+      />
+
+    <browser:resource
+      file="jquery.js"
+      name="jquery.js"
       />
 
     <browser:resource
@@ -19,13 +29,13 @@
     <kss:action
         name="uberselectionwidget-arrowup"
         command_factory="selector"
-        jsfile="uberselectionwidget.js"
+        jsfile="uberselectionwidget-kss.js"
         />
         
     <kss:action
         name="uberselectionwidget-arrowdown"
         command_factory="selector"
-        jsfile="uberselectionwidget.js"
+        jsfile="uberselectionwidget-kss.js"
         />
     
     <browser:pages
@@ -34,9 +44,15 @@
         permission="zope2.View">
       <browser:page
         name="uberselectionwidget_refresh_search"
-        attribute="refresh_search" />
+        attribute="kss_refresh_search" />
       <browser:page
         name="uberselectionwidget_refresh_browse"
+        attribute="kss_refresh_browse" />
+      <browser:page
+        name="uberselectionwidget_refresh_search2"
+        attribute="refresh_search" />
+      <browser:page
+        name="uberselectionwidget_refresh_browse2"
         attribute="refresh_browse" />
     </browser:pages>
 

@@ -167,8 +167,41 @@ class UberSelectionKSSView(PloneKSSView):
 
     template = ViewPageTemplateFile('uberselectionwidget-results.pt')
 
-    @kssaction
+    def search_and_insert_html(self, widget, fieldname):
+        """ perform search and insert rendered results into widget space """
+        results = widget.queryview.results(widget.name)
+        if results is not None:
+            results = [ widget.terms.getTerm(item) for item in results ]
+        return self.template(results=results)
+
     def refresh_search(self, formname, fieldname, searchterm):
+        """Given a form (view) name, a widget name and the submitted
+        search term, perform the search as the widget would and refresh the
+        results area with this information.
+        """
+        widget = self._get_widget(formname, fieldname)
+        self.request.form[widget.name + '.search'] = 'fakebutton'
+        self.request.form[widget.name + '.query'] = searchterm
+        return self.search_and_insert_html(widget, fieldname)
+
+    def refresh_browse(self, formname, fieldname, target):
+        """Given a form (view) name, a widget name and a target folder, 
+        refresh the results area with the contents of the given target.
+        """
+        widget = self._get_widget(formname, fieldname)
+        self.request.form[widget.name + '.browse.' + target] = 'fakebutton'
+        return self.search_and_insert_html(widget, fieldname)
+
+    def search_and_insert(self, widget, fieldname):
+        """ perform search and insert rendered results into widget space """
+        html = self.search_and_insert_html(widget, fieldname)
+        core = self.getCommandSet('core')
+        fieldid = 'uberselectionwidget-%s' % fieldname
+        area = core.getCssSelector('div[id=%s] .uberselectionWidgetResults' % fieldid)
+        core.replaceHTML(area, html)
+
+    @kssaction
+    def kss_refresh_search(self, formname, fieldname, searchterm):
         """Given a form (view) name, a widget name and the submitted
         search term, perform the search as the widget would and refresh the
         results area with this information.
@@ -179,24 +212,13 @@ class UberSelectionKSSView(PloneKSSView):
         self.search_and_insert(widget, fieldname)
 
     @kssaction
-    def refresh_browse(self, formname, fieldname, target):
+    def kss_refresh_browse(self, formname, fieldname, target):
         """Given a form (view) name, a widget name and a target folder, 
         refresh the results area with the contents of the given target.
         """
         widget = self._get_widget(formname, fieldname)
         self.request.form[widget.name + '.browse.' + target] = 'fakebutton'
         self.search_and_insert(widget, fieldname)
-        
-    def search_and_insert(self, widget, fieldname):
-        """ perform search and insert rendered results into widget space """
-        results = widget.queryview.results(widget.name)
-        if results is not None:
-            results = [ widget.terms.getTerm(item) for item in results ]
-        html = self.template(results=results)
-        core = self.getCommandSet('core')
-        fieldid = 'uberselectionwidget-%s' % fieldname
-        area = core.getCssSelector('div[id=%s] .uberselectionWidgetResults' % fieldid)
-        core.replaceHTML(area, html)
 
     def _get_widget(self, formname, fieldname):
         context = aq_inner(self.context)
