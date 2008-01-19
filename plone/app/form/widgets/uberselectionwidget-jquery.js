@@ -140,6 +140,12 @@ var uberselectionwidget = function() {
             $prev = $cur.prev('li');
             if (!$prev.length) $prev = $$result.find('li:last');
             $prev.addClass('highlight');
+            $prev = $prev.get(0);
+            var top = $prev.offsetTop;
+            var bottom = top + $prev.offsetHeight;
+            var parent = $prev.parentNode;
+            parent.scrollTop = Math.min(top, parent.scrollTop);
+            parent.scrollTop = Math.max(bottom - parent.offsetHeight, parent.scrollTop);
             return false;
         };
 
@@ -150,6 +156,12 @@ var uberselectionwidget = function() {
             $next = $cur.next('li');
             if (!$next.length) $next = $$result.find('li:first');
             $next.addClass('highlight');
+            $next = $next.get(0);
+            var top = $next.offsetTop;
+            var bottom = top + $next.offsetHeight;
+            var parent = $next.parentNode;
+            parent.scrollTop = Math.min(top, parent.scrollTop);
+            parent.scrollTop = Math.max(bottom - parent.offsetHeight, parent.scrollTop);
             return false;
         };
 
