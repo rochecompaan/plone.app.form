@@ -217,7 +217,6 @@ var uberselectionwidget = function() {
             var $description = $target.find('span.description').text();
             var $selection = $$field.find('fieldset.uberselectionWidgetSelection, ul.uberselectionWidgetSelection');
             var $$singleselect = $$field.find('input.uberSelectionWidgetInput').hasClass('single');
-            console.log($$singleselect);
             if (!$selection || $selection.length < 1) {
                 var $widget = $$field.find('div.widget');
                 $selection = $(document.createElement('ul')).addClass('uberselectionWidgetSelection');
