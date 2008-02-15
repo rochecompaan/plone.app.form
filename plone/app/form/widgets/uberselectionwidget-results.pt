@@ -2,11 +2,6 @@
   <tal:results repeat="term options/results">
     <li tal:attributes="usw-parent term/parent_token;  
                         usw-browse term/browse_token;">
-      <a href=""
-         class="uswParent"
-         tal:condition="python:term.parent_token is not None"
-         tal:attributes="href term/parent_token">&lt;</a>
-
       <input type="hidden"
              tal:attributes="name string:${options/name};
                              value term/token" />

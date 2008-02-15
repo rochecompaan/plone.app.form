@@ -1,9 +1,15 @@
-ul.uberselectionWidgetResults {
+div.uberselectionWidgetResultsContainer {
   position: absolute;
-  height: 140px;
+  height: 20em;
+  background-color: yellow;
+}
+
+ul.uberselectionWidgetResults {
+  float: left;
+  height: 20em;
+  width: 20em;
   overflow: auto;
   background-color: #ccc;
-  border-top: 1px solid #999;
   margin: 0;
   padding: 0;
 }
@@ -11,11 +17,8 @@ ul.uberselectionWidgetResults {
 ul.uberselectionWidgetResults li {
   display: block;
   margin: 0;
-  padding: 4px 10px;
+  padding: 0.5em 1em;
   background-color: #eee;
-  border: 1px solid #ccc;
-  border-width: 0 1px 1px 1px;
-  min-width: 100px;
 }
 
 ul.uberselectionWidgetResults li.highlight {

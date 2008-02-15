@@ -19,25 +19,29 @@ var uberselectionwidget = function() {
 
         function _hide() {
             // hides the result window
-            var $$result = $$field.find('fieldset.uberselectionWidgetResults, ul.uberselectionWidgetResults');
-            $$result.remove();
+            var $$container = $$field.find('div.uberselectionWidgetResultsContainer');
+            $$container.hide();
             $lastsearch = null;
         };
 
-        function _show($data) {
+        function _show($data, $browse) {
             // shows the result
-            var $$result = $$field.find('fieldset.uberselectionWidgetResults, ul.uberselectionWidgetResults');
-            if (!$$result || $$result.length < 1) {
+            var $$container = $$field.find('div.uberselectionWidgetResultsContainer');
+            if (!$$container.length) {
                 var $widget = $$field.find('div.widget');
-                $widget.append($data);
-            } else {
-                if ($data) {
-                    $$result.replaceWith($data);
-                } else {
-                    $$result.show();
+                $widget.append('<div class="uberselectionWidgetResultsContainer"></div>');
+                $$container = $$field.find('div.uberselectionWidgetResultsContainer');
+            }
+            var $$result = $$field.find('ul.uberselectionWidgetResults');
+            if ($data) {
+                if (!$browse && $$result && $$result.length > 0) {
+                    $$container.empty();
                 };
+                $$container.append($data);
             };
-            $$result.show();
+            var $$result = $$field.find('ul.uberselectionWidgetResults:last');
+            $$result.find('li:first').addClass('highlight');
+            $$container.show();
         };
 
         function _search() {
@@ -107,7 +111,7 @@ var uberselectionwidget = function() {
             // the search request (retrieve as text, not a document)
             $request = $.get('uberselectionwidget_refresh_browse2', $$query, function($data) {
                 // show results if there are any and cache them
-                _show($data);
+                _show($data, true);
             }, 'text');
         };
 
@@ -135,10 +139,15 @@ var uberselectionwidget = function() {
 
         function _keyUp() {
             // select the previous element
-            var $$result = $$field.find('fieldset.uberselectionWidgetResults, ul.uberselectionWidgetResults');
-            $cur = $$result.find('li.highlight').removeClass('highlight');
-            $prev = $cur.prev('li');
-            if (!$prev.length) $prev = $$result.find('li:last');
+            var $$result = $$field.find('ul.uberselectionWidgetResults:last');
+            var $cur = $$result.find('li.highlight').removeClass('highlight');
+            var $prev;
+            if (!$cur.length) {
+                $prev = $$result.find('li:first');
+            } else {
+                $prev = $cur.prev('li');
+                if (!$prev.length) $prev = $cur;
+            }
             $prev.addClass('highlight');
             $prev = $prev.get(0);
             var top = $prev.offsetTop;
@@ -151,10 +160,15 @@ var uberselectionwidget = function() {
 
         function _keyDown() {
             // select the next element
-            var $$result = $$field.find('fieldset.uberselectionWidgetResults, ul.uberselectionWidgetResults');
-            $cur = $$result.find('li.highlight').removeClass('highlight');
-            $next = $cur.next('li');
-            if (!$next.length) $next = $$result.find('li:first');
+            var $$result = $$field.find('ul.uberselectionWidgetResults:last');
+            var $cur = $$result.find('li.highlight').removeClass('highlight');
+            var $next;
+            if (!$cur.length) {
+                $next = $$result.find('li:first');
+            } else {
+                $next = $cur.next('li');
+                if (!$next.length) $next = $cur;
+            }
             $next.addClass('highlight');
             $next = $next.get(0);
             var top = $next.offsetTop;
@@ -166,19 +180,15 @@ var uberselectionwidget = function() {
         };
 
         function _keyLeft() {
-            var $$result = $$field.find('fieldset.uberselectionWidgetResults, ul.uberselectionWidgetResults');
-            $cur = $$result.find('li.highlight');
-            if (!$cur || $cur.length < 1)
-                return true;
-            var $target = $cur[0].attributes['usw-parent'];
-            if (!$target)
-                return true;
-            _search_handlers[$$field.attr('id')].browse($target.nodeValue);
+            var $$result = $$field.find('ul.uberselectionWidgetResults');
+            if ($$result.length > 1) {
+                $$result.slice(-1).remove();
+            };
             return false;
         };
 
         function _keyRight() {
-            var $$result = $$field.find('fieldset.uberselectionWidgetResults, ul.uberselectionWidgetResults');
+            var $$result = $$field.find('ul.uberselectionWidgetResults:last');
             $cur = $$result.find('li.highlight');
             if (!$cur || $cur.length < 1)
                 return true;
@@ -191,7 +201,7 @@ var uberselectionwidget = function() {
 
         function _keyEscape() {
             // hide results window
-            var $$result = $$field.find('fieldset.uberselectionWidgetResults, ul.uberselectionWidgetResults');
+            var $$result = $$field.find('ul.uberselectionWidgetResults');
             $$result.find('li.highlight').removeClass('highlight');
             $$result.hide();
         };
@@ -218,7 +228,7 @@ var uberselectionwidget = function() {
         function _submit() {
             // check whether a search result was selected with the keyboard
             // and open it
-            var $$result = $$field.find('fieldset.uberselectionWidgetResults, ul.uberselectionWidgetResults');
+            var $$result = $$field.find('ul.uberselectionWidgetResults:last');
             var $target = $$result.find('li.highlight');
             if (!$target || $target.length < 1) {
                 return true;
@@ -288,10 +298,7 @@ var uberselectionwidget = function() {
 
     $(function() {
         $('fieldset.uberselectionWidgetResults, ul.uberselectionWidgetResults')
-            .each(function () {
-                // the "hide" function doesn't work on Safari
-                this.style.display = "none";
-            });
+            .remove();
         $('input.uberSelectionWidgetInput').each(_setup);
     });
 
