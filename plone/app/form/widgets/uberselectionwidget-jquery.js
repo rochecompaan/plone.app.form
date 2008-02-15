@@ -19,27 +19,32 @@ var uberselectionwidget = function() {
 
         function _hide() {
             // hides the result window
-            var $$container = $$field.find('div.uberselectionWidgetResultsContainer');
+            var $$container = $$field.find('div.uberselectionWidgetColumns');
             $$container.hide();
             $lastsearch = null;
         };
 
         function _show($data, $browse) {
             // shows the result
-            var $$container = $$field.find('div.uberselectionWidgetResultsContainer');
+            var $$container = $$field.find('div.uberselectionWidgetColumns');
             if (!$$container.length) {
                 var $widget = $$field.find('div.widget');
-                $widget.append('<div class="uberselectionWidgetResultsContainer"></div>');
-                $$container = $$field.find('div.uberselectionWidgetResultsContainer');
+                $widget.append('<div class="uberselectionWidgetResults"><div class="uberselectionWidgetColumns"></div></div>');
+                $$container = $$field.find('div.uberselectionWidgetColumns');
             }
-            var $$result = $$field.find('ul.uberselectionWidgetResults');
+            var $$result = $$container.find('ul.uberselectionWidgetColumn');
             if ($data) {
                 if (!$browse && $$result && $$result.length > 0) {
                     $$container.empty();
                 };
                 $$container.append($data);
             };
-            var $$result = $$field.find('ul.uberselectionWidgetResults:last');
+            var $totalwidth = 0;
+            $$container.find('ul.uberselectionWidgetColumn').each(function() {
+                $totalwidth += $(this).width() + 1;
+            });
+            $$container.width($totalwidth);
+            var $$result = $$field.find('ul.uberselectionWidgetColumn:last');
             $$result.find('li:first').addClass('highlight');
             $$container.show();
         };
@@ -139,7 +144,7 @@ var uberselectionwidget = function() {
 
         function _keyUp() {
             // select the previous element
-            var $$result = $$field.find('ul.uberselectionWidgetResults:last');
+            var $$result = $$field.find('ul.uberselectionWidgetColumn:last');
             var $cur = $$result.find('li.highlight').removeClass('highlight');
             var $prev;
             if (!$cur.length) {
@@ -160,7 +165,7 @@ var uberselectionwidget = function() {
 
         function _keyDown() {
             // select the next element
-            var $$result = $$field.find('ul.uberselectionWidgetResults:last');
+            var $$result = $$field.find('ul.uberselectionWidgetColumn:last');
             var $cur = $$result.find('li.highlight').removeClass('highlight');
             var $next;
             if (!$cur.length) {
@@ -180,15 +185,21 @@ var uberselectionwidget = function() {
         };
 
         function _keyLeft() {
-            var $$result = $$field.find('ul.uberselectionWidgetResults');
+            var $$container = $$field.find('div.uberselectionWidgetColumns');
+            var $$result = $$field.find('ul.uberselectionWidgetColumn');
             if ($$result.length > 1) {
                 $$result.slice(-1).remove();
             };
+            var $totalwidth = 0;
+            $$container.find('ul.uberselectionWidgetColumn').each(function() {
+                $totalwidth += $(this).width() + 1;
+            });
+            $$container.width($totalwidth);
             return false;
         };
 
         function _keyRight() {
-            var $$result = $$field.find('ul.uberselectionWidgetResults:last');
+            var $$result = $$field.find('ul.uberselectionWidgetColumn:last');
             $cur = $$result.find('li.highlight');
             if (!$cur || $cur.length < 1)
                 return true;
@@ -201,7 +212,7 @@ var uberselectionwidget = function() {
 
         function _keyEscape() {
             // hide results window
-            var $$result = $$field.find('ul.uberselectionWidgetResults');
+            var $$result = $$field.find('ul.uberselectionWidgetColumn');
             $$result.find('li.highlight').removeClass('highlight');
             $$result.hide();
         };
@@ -228,7 +239,7 @@ var uberselectionwidget = function() {
         function _submit() {
             // check whether a search result was selected with the keyboard
             // and open it
-            var $$result = $$field.find('ul.uberselectionWidgetResults:last');
+            var $$result = $$field.find('ul.uberselectionWidgetColumn:last');
             var $target = $$result.find('li.highlight');
             if (!$target || $target.length < 1) {
                 return true;
@@ -297,7 +308,7 @@ var uberselectionwidget = function() {
     };
 
     $(function() {
-        $('fieldset.uberselectionWidgetResults, ul.uberselectionWidgetResults')
+        $('fieldset.uberselectionWidgetResults')
             .remove();
         $('input.uberSelectionWidgetInput').each(_setup);
     });

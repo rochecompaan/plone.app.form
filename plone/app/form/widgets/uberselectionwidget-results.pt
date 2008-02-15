@@ -1,4 +1,4 @@
-<ul class="uberselectionWidgetResults">
+<ul class="uberselectionWidgetColumn">
   <tal:results repeat="term options/results">
     <li tal:attributes="usw-parent term/parent_token;  
                         usw-browse term/browse_token;">
