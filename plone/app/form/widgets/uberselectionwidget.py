@@ -190,6 +190,7 @@ class UberSelectionKSSView(PloneKSSView):
         """
         widget = self._get_widget(formname, fieldname)
         self.request.form[widget.name + '.browse.' + target] = 'fakebutton'
+        self.request.form[widget.name + '.omitbrowsedfolder'] = 'true'
         return self.search_and_insert_html(widget, fieldname)
 
     def search_and_insert(self, widget, fieldname):
